@@ -1,0 +1,14 @@
+[package]
+
+name = "objcruntime"
+version = "0.0.1"
+authors = ["Jeremy Letang <letang.jeremy@gmail.com>"]
+
+[[lib]]
+
+name = "objcruntime"
+crate-type = ["dylib", "rlib"]
+
+[[bin]]
+
+name = "test"
