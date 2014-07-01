@@ -40,7 +40,7 @@ pub use ffi::{
     objc_property_t,
     SEL,
     id,
-
+    Id
 };
 
 mod macros;
