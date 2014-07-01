@@ -22,7 +22,7 @@
 
 #![allow(raw_pointer_deriving)]
 
-use libc::{c_char};
+use libc::{c_char, c_int, size_t};
 
 pub struct objc_class;
 pub struct objc_method;
@@ -38,47 +38,71 @@ pub trait Wrapper<T> {
     fn unwrap(&self) -> T;
 }
 
+pub trait Id {
+    fn get_id(&self) -> id;
+    fn from_id(id: id) -> Self;
+}
+
 #[deriving(Clone, PartialEq, Show)]
 pub struct Class {
     ptr: *mut objc_class
 }
+
+impl_wrapper!(Class, objc_class)
 
 #[deriving(Clone, PartialEq, Show)]
 pub struct Method {
     ptr: *mut objc_method
 }
 
+impl_wrapper!(Method, objc_method)
+
 #[deriving(Clone, PartialEq, Show)]
 pub struct Ivar {
     ptr: *mut objc_ivar
 }
+
+impl_wrapper!(Ivar, objc_ivar)
 
 #[deriving(Clone, PartialEq, Show)]
 pub struct Category {
     ptr: *mut objc_category
 }
 
+impl_wrapper!(Category, objc_category)
+
 #[deriving(Clone, PartialEq, Show)]
 pub struct objc_property_t {
     ptr: *mut objc_property
 }
+
+impl_wrapper!(objc_property_t, objc_property)
 
 #[deriving(Clone, PartialEq, Show)]
 pub struct SEL {
     ptr: *mut objc_selector
 }
 
+impl_wrapper!(SEL, objc_selector)
+
 #[deriving(Clone, PartialEq, Show)]
 pub struct id {
     ptr: *mut objc_object
 }
 
-impl_wrapper!(Class, objc_class)
-impl_wrapper!(Method, objc_method)
-impl_wrapper!(Ivar, objc_ivar)
-impl_wrapper!(Category, objc_category)
-impl_wrapper!(objc_property_t, objc_property)
-impl_wrapper!(SEL, objc_selector)
+impl Id for id {
+    fn get_id(&self) -> id {
+        *self
+    }
+
+    #[allow(unused_variable)]
+    fn from_id(id: id) -> id {
+        id {
+            ptr: ::std::ptr::mut_null()
+        }
+    }
+}
+
 impl_wrapper!(id, objc_object)
 
 // ffi
@@ -128,10 +152,48 @@ pub fn to_objcbool(b: bool) -> BOOL {
 
 #[link(name = "Foundation", kind = "framework")]
 extern "C" {
+    // objc
     pub fn objc_getClass(name: *const c_char) -> id;
+    pub fn objc_msgSend(self_: id, op: SEL, ...) -> id;
 
-
+    // object
     pub fn object_getClass(object: id) -> Class;
     pub fn object_getClassName(obj: id) -> *const c_char;
+
+    // class
+    pub fn class_getName(cls: Class) -> *const c_char;
+    pub fn class_getSuperclass(cls: Class) -> Class;
+    pub fn class_getVersion(cls: Class) -> c_int;
+    pub fn class_isMetaClass(cls: Class) -> BOOL;
+    pub fn class_createInstance(cls: Class, extraBytes: size_t) -> id;
+
+    // sel
+    pub fn sel_getName(aSelector: SEL) -> *const c_char;
+    pub fn sel_getUid(string: *const c_char) -> SEL;
+    pub fn sel_isEqual(lhs: SEL, rhs: SEL) -> BOOL;
+    pub fn sel_registerName(string: *const c_char) -> SEL;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

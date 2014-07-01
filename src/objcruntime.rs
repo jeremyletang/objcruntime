@@ -44,8 +44,9 @@ pub use ffi::{
 };
 
 mod macros;
-mod ffi;
 
+#[doc(hidden)]
+pub mod ffi;
 pub mod objc;
 pub mod object;
 pub mod class;
@@ -53,3 +54,4 @@ pub mod method;
 pub mod ivar;
 pub mod protocol;
 pub mod sel;
+pub mod user_macros;

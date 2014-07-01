@@ -20,31 +20,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-use ffi::Wrapper;
-use ffi;
+#![macro_escape]
 
-pub fn get_name(cls: &ffi::Class) -> &str {
-    let c_name = unsafe { ffi::class_getName(*cls) };
-    unsafe { ::std::str::raw::c_str_to_static_slice(c_name) }
-}
+#[macro_export]
+macro_rules! m(
+    ($id:expr $msg:ident) => ({
+        use objcruntime::{sel, ffi};
 
-pub fn get_superclass(cls: &ffi::Class) -> Option<ffi::Class> {
-    let ptr = unsafe { ffi::class_getSuperclass(*cls) };
-    ptr_opt!(ptr)
-}
+        unsafe {
+            let op = sel::register(stringify!($msg));
+            ffi::objc_msgSend($id, op)
+        }
+    });
 
-pub fn get_version(cls: &ffi::Class) -> int {
-    unsafe { ffi::class_getVersion(*cls) as int }
-}
+    ($id:expr $($msg:ident: $arg:expr)+) => ({
+        use objcruntime::{sel, ffi};
+        use objcruntime::ffi::Id;
 
-pub fn is_metaclass(cls: &ffi::Class) -> bool {
-    unsafe {
-        ffi::to_bool(ffi::class_isMetaClass(*cls))
-    }
-}
+        unsafe {
+            let op = sel::register(concat!($(stringify!($msg), ":"), +));
+            ffi::objc_msgSend($id.get_id(), op $(,$arg)+)
+        }
+    })
+)
 
-pub fn create_instance(cls: &ffi::Class) -> ffi::id {
-    unsafe {
-        ffi::class_createInstance(*cls, 0)
-    }
-}
+#[macro_export]
+macro_rules! cstr(
+    ($string:expr) => (
+        $string.to_c_str().unwrap()
+    )
+)
+
+#[macro_export]
+macro_rules! cls(
+    ($class:ident) => (objc::get_class(stringify!($class)).unwrap())
+)

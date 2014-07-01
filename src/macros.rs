@@ -25,11 +25,8 @@
 #[macro_export]
 macro_rules! ptr_opt(
     ($ptr:ident) => (
-        if $ptr.unwrap().is_null() {
-            None
-        } else {
-            Some($ptr)
-        }
+        if $ptr.unwrap().is_null() { None }
+        else { Some($ptr) }
     )
 )
 

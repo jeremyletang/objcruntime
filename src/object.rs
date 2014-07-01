@@ -23,12 +23,12 @@
 use ffi;
 use ffi::Wrapper;
 
-pub fn get_class(object: ffi::id) -> Option<ffi::Class> {
-    let class = unsafe { ffi::object_getClass(object) };
+pub fn get_class(object: &ffi::id) -> Option<ffi::Class> {
+    let class = unsafe { ffi::object_getClass(*object) };
     ptr_opt!(class)
 }
 
-pub fn get_classname(object: ffi::id) -> &'static str {
-    let c_str = unsafe { ffi::object_getClassName(object) };
+pub fn get_classname(object: &ffi::id) -> &'static str {
+    let c_str = unsafe { ffi::object_getClassName(*object) };
     unsafe { ::std::str::raw::c_str_to_static_slice(c_str) }
 }
