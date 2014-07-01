@@ -35,11 +35,10 @@ macro_rules! m(
 
     ($id:expr $($msg:ident: $arg:expr)+) => ({
         use objcruntime::{sel, ffi};
-        use objcruntime::ffi::Id;
 
         unsafe {
             let op = sel::register(concat!($(stringify!($msg), ":"), +));
-            ffi::objc_msgSend($id.get_id(), op $(,$arg)+)
+            ffi::objc_msgSend($id, op $(,$arg)+)
         }
     })
 )

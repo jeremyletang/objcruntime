@@ -7,9 +7,6 @@ extern crate objcruntime;
 extern crate objcruntime;
 extern crate libc;
 
-// use objcruntime::{object};
-// use objcruntime::ffi::Wrapper;
-
 fn main() {
     let pool = m![m![cls!(NSAutoreleasePool) alloc] init];
     // let class: objcruntime::Class = object::get_class(&id).unwrap();

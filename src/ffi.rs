@@ -39,7 +39,7 @@ pub trait Wrapper<T> {
 }
 
 pub trait Id {
-    fn get_id(&self) -> id;
+    fn as_id(&self) -> id;
     fn from_id(id: id) -> Self;
 }
 
@@ -88,19 +88,6 @@ impl_wrapper!(SEL, objc_selector)
 #[deriving(Clone, PartialEq, Show)]
 pub struct id {
     ptr: *mut objc_object
-}
-
-impl Id for id {
-    fn get_id(&self) -> id {
-        *self
-    }
-
-    #[allow(unused_variable)]
-    fn from_id(id: id) -> id {
-        id {
-            ptr: ::std::ptr::mut_null()
-        }
-    }
 }
 
 impl_wrapper!(id, objc_object)
