@@ -53,5 +53,9 @@ macro_rules! cstr(
 
 #[macro_export]
 macro_rules! cls(
-    ($class:ident) => (objc::get_class(stringify!($class)).unwrap())
+    ($class:ident) => ({
+        use objcruntime::objc;
+
+        objc::get_class(stringify!($class)).unwrap()
+    })
 )
