@@ -22,7 +22,7 @@
 
 #![allow(raw_pointer_deriving)]
 
-use libc::{c_char, c_int, size_t};
+use libc::{c_char, c_int, size_t, c_void};
 
 pub struct objc_class;
 pub struct objc_method;
@@ -142,6 +142,7 @@ extern "C" {
     // objc
     pub fn objc_getClass(name: *const c_char) -> id;
     pub fn objc_msgSend(self_: id, op: SEL, ...) -> id;
+    pub fn objc_msgSend_stret(stretAddr: *mut c_void, theReceiver: id, theSelector: SEL,  ...);
 
     // object
     pub fn object_getClass(object: id) -> Class;

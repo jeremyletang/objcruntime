@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#![crate_id = "github.com/jeremyletang/objcruntime"]
+#![crate_name = "github.com/jeremyletang/objcruntime"]
 #![desc = "Rust binding to the objective-c runtime"]
 #![license = "MIT"]
 #![crate_type = "rlib"]

@@ -36,9 +36,31 @@ macro_rules! m(
     ($id:expr $($msg:ident: $arg:expr)+) => ({
         use objcruntime::{sel, ffi};
 
+        let op = sel::register(concat!($(stringify!($msg), ":"), +));
         unsafe {
-            let op = sel::register(concat!($(stringify!($msg), ":"), +));
             ffi::objc_msgSend($id, op $(,$arg)+)
+        }
+    })
+)
+
+// pub fn objc_msgSend_stret(stretAddr: *mut c_void, theReceiver: id, theSelector: SEL,  ...);
+#[macro_export]
+macro_rules! m_struct(
+    ($struc:ident, $id:expr $msg:ident) => ({
+        use objcruntime::{sel, ffi};
+
+        unsafe {
+            let op = sel::register(stringify!($msg));
+            ffi::objc_msgSend_stret(struc, $id, op)
+        }
+    });
+
+    ($struc:ident, $id:expr $($msg:ident: $arg:expr)+) => ({
+        use objcruntime::{sel, ffi};
+
+        let op = sel::register(concat!($(stringify!($msg), ":"), +));
+        unsafe {
+            ffi::objc_msgSend_stret(struc, $id, op $(,$arg)+)
         }
     })
 )
